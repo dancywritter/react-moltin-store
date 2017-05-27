@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { gateway as MoltinGateway } from 'moltin'
+import { gateway as MoltinGateway } from '@moltin/sdk'
 import { updateCart } from '../actions/actions'
 
 //import Modal from './modal';
@@ -9,18 +9,21 @@ import Button from './Button';
 class Product extends Component {
 
   constructor() {
-      super();
-      this.state = {
-          show: false,
-          image: null
-      };
+      super()
       this.toggleModal = this.toggleModal.bind(this)
       this.addToCart = this.addToCart.bind(this)
       this.getDefaultImage = this.getDefaultImage.bind(this)
+      this.state = {
+          show: false,
+      }
   }
 
   toggleModal() {
       this.setState({ show: !this.state.show })
+  }
+
+  componentWillMount() {
+      this.getDefaultImage(this.props.product.relationships.files.data[0].id)
   }
 
   addToCart(id) {
@@ -29,7 +32,7 @@ class Product extends Component {
       })
       Moltin.Cart.AddProduct(id, 1).then((cart) => {
           this.props.dispatch(updateCart(cart))
-      });
+      })
   }
 
   getDefaultImage(id) {
@@ -43,7 +46,6 @@ class Product extends Component {
 
   render() {
       const product = this.props.product
-      this.getDefaultImage(product.relationships.files.data[0].id)
 
       return (
           <div className="product">

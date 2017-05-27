@@ -1,15 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { gateway as MoltinGateway } from 'moltin'
+import { Link } from 'react-router-dom'
+import { gateway as MoltinGateway } from '@moltin/sdk'
 
 class Cart extends Component {
-
-    constructor() {
-        super()
-        this.state = {
-            cart: {}
-        }
-    }
 
     componentWillMount() {
         const Moltin = MoltinGateway({
@@ -22,34 +15,25 @@ class Cart extends Component {
 
     render() {
 
-        let cart = this.state.cart
-        if (this.props.cart.data) {
-            cart = this.props.cart
-        }
+        let cart = this.props.cart
 
         if (!cart.data) {
             return(
-                <div className="cart">
-                      <span>Cart</span>
-                      <div className="cart-count">0</div>
-                </div>
+                <Link to="/cart">
+                    <span>Cart</span>
+                    <div className="cart-count">0</div>
+                </Link>
             )
         }
         else {
             return(
-                <div className="cart">
+                <Link to="/cart">
                     <span>Cart</span>
                     <div className="cart-count">{ cart.data.length }</div>
-                </div>
+                </Link>
             )
         }
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        cart: state.cart
-    };
-};
-
-export default connect(mapStateToProps)(Cart);
+export default Cart

@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "moltin": "^2.1.0",
+    "@moltin/sdk": "^2.3.0",
+    "firebase": "^4.0.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "reactfire": "^1.0.0",
     "redux": "^3.6.0"
   },
   "devDependencies": {

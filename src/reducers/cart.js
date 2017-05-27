@@ -1,4 +1,4 @@
-import { UPDATE_CART } from '../actions/action-types';
+import { UPDATE_CART } from '../actions/action-types'
 
 const cart = (state = {}, action) => {
   switch (action.type) {

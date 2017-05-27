@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { gateway as MoltinGateway } from '@moltin/sdk'
+import { updateCart } from '../actions/actions'
 
 import Cart from './Cart'
-import logo from '../logo.svg'
 
 class Header extends Component {
 
@@ -13,32 +16,57 @@ class Header extends Component {
         }
     }
 
+    componentWillMount() {
+        const Moltin = MoltinGateway({
+            client_id: 'RuIG6TZULXPmfzhIfwgJg1Evg8iKvgchkv68gIoQsu'
+        })
+        Moltin.Cart.Items().then((cart) => {
+            this.props.dispatch(updateCart(cart))
+        })
+    }
+
     logout() {
         localStorage.removeItem('user')
     }
 
     render() {
+        const cart = this.props.cart
+
         if (!localStorage.getItem('user')) {
             return(
                 <header className="header">
-                    <div className="header-logo"><img src={logo} alt="react moltin store" /></div>
+                  <Link to="/">
+                      <div className="header-home">
+                          <span>Home</span>
+                      </div>
+                  </Link>
                     <div className="header-cart">
-                        <Cart />
+                        <Cart cart={ cart } />
                     </div>
                 </header>
-            );
+            )
         }
         else {
             return(
                 <header className="header">
-                    <div className="header-logo"><img src={logo} alt="react moltin store" /></div>
+                    <Link to="/">
+                        <div className="header-home">
+                            <span>Home</span>
+                        </div>
+                    </Link>
                     <div className="header-cart">
-                        <Cart />
+                        <Cart cart={ cart } />
                     </div>
                 </header>
-            );
+            )
         }
     }
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+    return {
+        cart: state.cart
+    }
+}
+
+export default connect(mapStateToProps)(Header)

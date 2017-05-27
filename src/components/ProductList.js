@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { gateway as MoltinGateway } from 'moltin';
+import { gateway as MoltinGateway } from '@moltin/sdk';
 
 import Product from './Product'
 
@@ -18,7 +18,6 @@ class ProductList extends Component {
             client_id: 'RuIG6TZULXPmfzhIfwgJg1Evg8iKvgchkv68gIoQsu'
         });
         Moltin.Products.All().then((products) => {
-            console.log(products.data)
             this.setState({ products: products.data })
         })
     }
