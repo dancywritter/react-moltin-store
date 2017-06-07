@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { gateway as MoltinGateway } from '@moltin/sdk'
 import { updateCart } from '../actions/actions'
 
-import CartItem from './CartItem'
-import Button from './Button'
+import CartItem from '../components/CartItem'
+import Button from '../components/Button'
 
 
 class CartPage extends Component {
@@ -43,7 +43,7 @@ class CartPage extends Component {
                 <div className="cart">
                     <span>Total price: <strong>{ cart.meta.display_price.with_tax.formatted }</strong></span>
                     <Link to="/checkout"><Button label="Order now" /></Link>
-                    <div className="cart-items">
+                    <div className="items">
                         { this.renderItems() }
                     </div>
                 </div>

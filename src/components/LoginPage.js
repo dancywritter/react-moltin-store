@@ -19,13 +19,14 @@ class LoginPage extends Component {
         const that = this
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(function(user) {
+                localStorage.setItem('muser', user.uid)
                 that.props.dispatch(updateUser(user))
             })
             .catch(function(error) {
                 const errorMessage = error.message;
                 that.setState({ error: errorMessage })
                 console.warn(error)
-            });
+            })
     }
 
     signup(email, password) {
