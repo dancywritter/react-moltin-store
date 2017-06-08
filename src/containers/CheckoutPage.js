@@ -16,16 +16,27 @@ class CheckoutPage extends Component {
         }
     }
 
-    componentDidMount() {
-        const that = this
-        firebase.database().ref('users/' + this.props.user.uid).on("value", function(snapshot) {
-            that.props.dispatch(updateUser(firebase.auth().currentUser))
-            if (snapshot.val() !== null) {
-                that.props.dispatch(updateAddress(snapshot.val().user.address))
+    getFirebaseUserPromise() {
+        return new Promise((resolve, reject) => {
+            const getUser = () => {
+                const user = firebase.auth().currentUser
+                if (user) {
+                  resolve(user)
+                } else {
+                  setTimeout(() => getUser(), 500)
+                }
             }
-        })
+            getUser();
+        });
+    }
 
+    componentDidMount() {
+        this.getFirebaseUserPromise()
+          .then(user => {
+            this.props.dispatch(updateUser(user))
+          })
         const order_id = localStorage.getItem('morder')
+
         if (order_id) {
             fetch('http://localhost:4000/api/order/' + order_id)
             .then(res => res.json())
@@ -36,14 +47,20 @@ class CheckoutPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
+        if (!this.props.user || nextProps.user.uid !== this.props.user.uid) {
+            firebase.database().ref('users/' + nextProps.user.uid).on("value", snapshot => {
+                if (snapshot.val() != null) {
+                    this.props.dispatch(updateAddress(snapshot.val().address))
+                }
+            })
+        }
     }
 
     render() {
-        let user = this.props.user
-        let cart = this.props.cart
-        let order = this.props.order
-        let address = this.props.address
+        const user = this.props.user
+        const cart = this.props.cart
+        const order = this.props.order
+        const address = this.props.address
 
         if (!user.uid) {
             return (
@@ -53,7 +70,7 @@ class CheckoutPage extends Component {
                 </div>
             )
         }
-        else if (order.id) {
+        else if (order.data) {
             return (
               <div className="order">
                   <span className="order-title">Here is your order recap, time to select you shipping options</span>
@@ -62,6 +79,7 @@ class CheckoutPage extends Component {
             )
         }
         else {
+            if (!Object.keys(address).length) return null
             return (
                 <div className="checkout">
                     <span className="checkout-title">Welcome! You can now proceed your order</span>
