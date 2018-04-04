@@ -8,65 +8,49 @@ import Cart from './Cart'
 
 class Header extends Component {
 
-    constructor() {
-        super()
-        this.logout = this.logout.bind(this)
-        this.state = {
-            user: null
-        }
+  constructor() {
+    super()
+    this.logout = this.logout.bind(this)
+    this.state = {
+      user: null
     }
+  }
 
-    componentWillMount() {
-        const Moltin = MoltinGateway({
-            client_id: 'RuIG6TZULXPmfzhIfwgJg1Evg8iKvgchkv68gIoQsu'
-        })
-        Moltin.Cart.Items().then((cart) => {
-            this.props.dispatch(updateCart(cart))
-        })
-    }
+  componentWillMount() {
+    const Moltin = MoltinGateway({
+      client_id: 'RuIG6TZULXPmfzhIfwgJg1Evg8iKvgchkv68gIoQsu'
+    })
+    Moltin.Cart.Items().then((cart) => {
+      this.props.dispatch(updateCart(cart))
+    })
+  }
 
-    logout() {
-        localStorage.removeItem('user')
-    }
+  logout() {
+    localStorage.removeItem('user')
+  }
 
-    render() {
-        const cart = this.props.cart
+  render() {
+    const cart = this.props.cart
 
-        if (!localStorage.getItem('user')) {
-            return(
-                <header className="header">
-                  <Link to="/">
-                      <div className="header-home">
-                          <span>Home</span>
-                      </div>
-                  </Link>
-                    <div className="header-cart">
-                        <Cart cart={ cart } />
-                    </div>
-                </header>
-            )
-        }
-        else {
-            return(
-                <header className="header">
-                    <Link to="/">
-                        <div className="header-home">
-                            <span>Home</span>
-                        </div>
-                    </Link>
-                    <div className="header-cart">
-                        <Cart cart={ cart } />
-                    </div>
-                </header>
-            )
-        }
-    }
+    return(
+      <header className="header">
+        <Link to="/">
+          <div className="header-home">
+            <span>Home</span>
+          </div>
+        </Link>
+        <div className="header-cart">
+          <Cart cart={ cart } />
+        </div>
+      </header>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        cart: state.cart
-    }
+  return {
+    cart: state.cart
+  }
 }
 
 export default connect(mapStateToProps)(Header)
